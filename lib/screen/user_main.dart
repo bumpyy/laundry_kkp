@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:laundry_kkp/app/sign_in/sign_in_button.dart';
+import 'package:laundry_kkp/app/sign_in/sign_in_page.dart';
 import 'package:laundry_kkp/screen/pemesanan.dart';
+import 'package:laundry_kkp/services/shared_pref.dart';
 
 class UserMain extends StatelessWidget {
   @override
@@ -66,10 +68,15 @@ class UserMain extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             GestureDetector(
-              onTap: () => {Navigator.pop(context)},
+              onTap: () => {
+                SharedPrefs().username = '',
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => LoginScreen(),
+                ))
+              },
               child: Text('Logout'),
             )
           ],

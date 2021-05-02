@@ -11,10 +11,6 @@ class DatabaseHelper {
   static final userTable = 'users';
   static final adminTable = 'admin';
 
-  static final columnId = '_id';
-  static final columnEmail = 'email';
-  static final columnPass = 'pass';
-
   // make this a singleton class
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
@@ -38,25 +34,41 @@ class DatabaseHelper {
 
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
-    await db.execute('''
-          CREATE TABLE $userTable (
-            $columnId INTEGER PRIMARY KEY,
-            $columnEmail TEXT NOT NULL,
-            $columnPass INTEGER NOT NULL
-          )
-          ''');
-
-    await db.execute('''
-          CREATE TABLE $adminTable (
-            username TEXT NOT NULL,
+    await db
+        .execute('''
+          CREATE TABLE users (
+            id INTEGER PRIMARY KEY autoincrement,
+            email TEXT NOT NULL,
             pass INTEGER NOT NULL
           )
-          ''').then(
-      (_) => db.insert(
-        'admin',
-        {'username': "admin", 'pass': 'admin123'},
-      ),
-    );
+          ''')
+        .then(
+          (_) => db.execute('''
+          CREATE TABLE laundry (
+            id INTEGER PRIMARY KEY autoincrement,
+            emailUser TEXT NOT NULL,
+            kategori TEXT NOT NULL,
+            berat TEXT NOT NULL,
+            kategoriPengerjaan TEXT NOT NULL,
+            sudahBayar BOOLEAN,
+            statusPengerjaan TEXT NOT NULL
+          )
+          '''),
+        )
+        .then(
+          (value) => db.execute('''
+           CREATE TABLE admin (
+            username TEXT NOT NULL,
+            pass TEXT NOT NULL
+          )
+          '''),
+        )
+        .then(
+          (_) => db.insert(
+            'admin',
+            {'username': "admin", 'pass': 'admin123'},
+          ),
+        );
   }
 
   // Helper methods
@@ -76,6 +88,25 @@ class DatabaseHelper {
     return await db.query(userTable);
   }
 
+  Future<List<dynamic>> querySingleItem(
+      String table, dynamic id, List<String> columnsToSelect) async {
+    // get a reference to the database
+    Database db = await DatabaseHelper.instance.database;
+
+    // get single row
+    String whereString = 'email = ?';
+    String rowId = id;
+    List<dynamic> whereArguments = [rowId];
+    List<Map> result = await db.query(table,
+        columns: columnsToSelect,
+        where: whereString,
+        whereArgs: whereArguments);
+
+    // print the results
+    return result;
+    // {_id: 1, name: Bob, age: 23}
+  }
+
   // All of the methods (insert, query, update, delete) can also be done using
   // raw SQL commands. This method uses a raw query to give the row count.
   Future<int> queryRowCount() async {
@@ -88,15 +119,14 @@ class DatabaseHelper {
   // column values will be used to update the row.
   Future<int> update(Map<String, dynamic> row) async {
     Database db = await instance.database;
-    int id = row[columnId];
-    return await db
-        .update(userTable, row, where: '$columnId = ?', whereArgs: [id]);
+    int id = row['id'];
+    return await db.update(userTable, row, where: 'id = ?', whereArgs: [id]);
   }
 
   // Deletes the row specified by the id. The number of affected rows is
   // returned. This should be 1 as long as the row exists.
   Future<int> delete(int id) async {
     Database db = await instance.database;
-    return await db.delete(userTable, where: '$columnId = ?', whereArgs: [id]);
+    return await db.delete(userTable, where: 'id = ?', whereArgs: [id]);
   }
 }
