@@ -16,6 +16,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Material App',
+      theme: ThemeData().copyWith(
+        primaryColor: Colors.green,
+        accentColor: Colors.green,
+      ),
       home: Scaffold(
         body: Center(
           child: SharedPrefs().username != "" ? UserMain() : LoginScreen(),

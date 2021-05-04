@@ -44,14 +44,16 @@ class DatabaseHelper {
           ''')
         .then(
           (_) => db.execute('''
-          CREATE TABLE laundry (
+          CREATE TABLE pesanan (
             id INTEGER PRIMARY KEY autoincrement,
+            nama TEXT NOT NULL,
             emailUser TEXT NOT NULL,
-            kategori TEXT NOT NULL,
+            lokasi TEXT NOT NULL,
             berat TEXT NOT NULL,
+            kategori TEXT NOT NULL,
             kategoriPengerjaan TEXT NOT NULL,
             sudahBayar BOOLEAN,
-            statusPengerjaan TEXT NOT NULL
+            statusPengerjaan DEFAULT "Diproses" TEXT NOT NULL
           )
           '''),
         )
@@ -76,20 +78,30 @@ class DatabaseHelper {
   // Inserts a row in the database where each key in the Map is a column name
   // and the value is the column value. The return value is the id of the
   // inserted row.
-  Future<int> insert(Map<String, dynamic> row) async {
+  Future<int> insertUser(Map<String, dynamic> row) async {
     Database db = await instance.database;
     return await db.insert(userTable, row);
   }
 
+  Future<int> insertPesanan(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    return await db.insert('pesanan', row);
+  }
+
   // All of the rows are returned as a list of maps, where each map is
   // a key-value list of columns.
-  Future<List<Map<String, dynamic>>> queryAllRows() async {
+  Future<List<Map<String, dynamic>>> queryAllUserRows() async {
     Database db = await instance.database;
     return await db.query(userTable);
   }
 
-  Future<List<dynamic>> querySingleItem(
-      String table, dynamic id, List<String> columnsToSelect) async {
+  Future<List<Map<String, dynamic>>> queryAllPesananRows() async {
+    Database db = await instance.database;
+    return await db.query('pesanan');
+  }
+
+  Future<List<dynamic>> querySingleUser(
+      {String table, dynamic id, List<String> columnsToSelect}) async {
     // get a reference to the database
     Database db = await DatabaseHelper.instance.database;
 
@@ -104,15 +116,15 @@ class DatabaseHelper {
 
     // print the results
     return result;
-    // {_id: 1, name: Bob, age: 23}
+    // {_id: 1, email: example@mail.com, pass: example}
   }
 
   // All of the methods (insert, query, update, delete) can also be done using
   // raw SQL commands. This method uses a raw query to give the row count.
-  Future<int> queryRowCount() async {
+  Future<int> queryRowCount(String tableName) async {
     Database db = await instance.database;
     return Sqflite.firstIntValue(
-        await db.rawQuery('SELECT COUNT(*) FROM $userTable'));
+        await db.rawQuery('SELECT COUNT(*) FROM $tableName'));
   }
 
   // We are assuming here that the id column in the map is set. The other

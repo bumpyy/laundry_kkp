@@ -15,8 +15,8 @@ class LoginScreen extends StatelessWidget {
   Future<String> _authUser(LoginData data) {
     print('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) async {
-      var fentchData = await DatabaseHelper.instance
-          .querySingleItem('users', data.name, ['*']);
+      var fentchData = await DatabaseHelper.instance.querySingleUser(
+          table: 'users', id: data.name, columnsToSelect: ['*']);
       if (data.name.isEmpty) {
         return 'Email tidak boleh kosong';
       }
@@ -25,12 +25,6 @@ class LoginScreen extends StatelessWidget {
       }
       if (fentchData.isEmpty) {
         return 'data tidak ditemukan';
-        // if (fentchData[0]['email'] != data.name) {
-        //   return 'Email tidak ada';
-        // }
-        // if (fentchData[0]['pass'] != data.password) {
-        //   return 'Password salah';
-        // }
       }
 
       print(fentchData);
@@ -51,7 +45,7 @@ class LoginScreen extends StatelessWidget {
       }
 
       await DatabaseHelper.instance
-          .insert({'email': data.name, 'pass': data.password});
+          .insertUser({'email': data.name, 'pass': data.password});
 
       SharedPrefs().username = data.name;
       return null;
