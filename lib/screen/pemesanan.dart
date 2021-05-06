@@ -79,6 +79,7 @@ class _PemesananState extends State<Pemesanan> {
                     // valueTransformer: (text) => num.tryParse(text),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(context),
+                      FormBuilderValidators.numeric(context)
                     ]),
                     keyboardType: TextInputType.number,
                   ),
@@ -119,15 +120,13 @@ class _PemesananState extends State<Pemesanan> {
                         if (_formKey.currentState.validate()) {
                           final value = {
                             'emailUser': SharedPrefs().username,
-                            'SudahBayar': false,
+                            'SudahBayar': 0,
                             'statusPengerjaan': 'diproses'
                           };
                           value.addAll(_formKey.currentState.value);
-
                           print(value);
                           await DatabaseHelper.instance.insertPesanan(value);
-                          print(await DatabaseHelper.instance
-                              .queryAllPesananRows());
+                          Navigator.pop(context);
                         } else {
                           print("validation failed");
                         }
@@ -144,7 +143,6 @@ class _PemesananState extends State<Pemesanan> {
                       ),
                       onPressed: () {
                         _formKey.currentState.reset();
-                        Navigator.pop(context);
                       },
                     ),
                   ),

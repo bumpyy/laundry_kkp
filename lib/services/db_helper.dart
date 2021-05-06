@@ -52,8 +52,8 @@ class DatabaseHelper {
             berat TEXT NOT NULL,
             kategori TEXT NOT NULL,
             kategoriPengerjaan TEXT NOT NULL,
-            sudahBayar BOOLEAN,
-            statusPengerjaan DEFAULT "Diproses" TEXT NOT NULL
+            sudahBayar INTEGER,
+            statusPengerjaan TEXT NOT NULL
           )
           '''),
         )
@@ -98,6 +98,13 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> queryAllPesananRows() async {
     Database db = await instance.database;
     return await db.query('pesanan');
+  }
+
+  Future<List<Map<String, dynamic>>> queryAllPesananSingleUserRows(
+      String userMail) async {
+    Database db = await instance.database;
+    return await db
+        .rawQuery("SELECT * FROM pesanan WHERE emailUser = '$userMail'");
   }
 
   Future<List<dynamic>> querySingleUser(

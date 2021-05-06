@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:laundry_kkp/services/db_helper.dart';
+import 'package:laundry_kkp/services/shared_pref.dart';
 
-var COLORS = [
+const COLORS = [
   Color(0xFFEF7A85),
   Color(0xFFFF90B3),
   Color(0xFFFFC2E2),
@@ -14,83 +16,16 @@ class ListPesanan extends StatefulWidget {
   ListPesanan({Key key, this.title}) : super(key: key);
 
   final String title;
-
   @override
   _ListPesananState createState() => new _ListPesananState();
 }
 
 class _ListPesananState extends State<ListPesanan> {
-  var data = [
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/200?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/100?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/150?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/125?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/175?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/225?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/250?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/350?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/275?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/300?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/325?random"
-    }
-  ];
-
+  var data = [];
   @override
   Widget build(BuildContext context) {
+    DatabaseHelper.instance.queryAllPesananRows().then((value) => data = value);
+
     return new Scaffold(
       backgroundColor: Colors.white,
       appBar: new AppBar(
@@ -100,35 +35,59 @@ class _ListPesananState extends State<ListPesanan> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: new Stack(
-        children: <Widget>[
-          new ListView.builder(
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(0.0),
-            scrollDirection: Axis.vertical,
-            primary: true,
-            itemCount: data.length,
-            itemBuilder: (BuildContext content, int index) {
-              return AwesomeListItem(
-                  title: data[index]["title"],
-                  content: data[index]["content"],
-                  color: data[index]["color"],
-                  image: data[index]["image"]);
-            },
-          ),
-        ],
+      body: FutureBuilder(
+        future: DatabaseHelper.instance
+            .queryAllPesananSingleUserRows(SharedPrefs().username),
+        initialData: [],
+        builder: (context, snapshot) {
+          print(snapshot.data);
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            child: snapshot.data.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.local_laundry_service),
+                        Text('Belum ada pesanan')
+                      ],
+                    ),
+                  )
+                : Scrollbar(
+                    thickness: 10,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(0.0),
+                      scrollDirection: Axis.vertical,
+                      primary: true,
+                      itemCount: snapshot.hasData ? snapshot.data.length : 0,
+                      itemBuilder: (BuildContext content, int index) {
+                        return AwesomeListItem(
+                          title: snapshot.data[index]['nama'],
+                          content: snapshot.data[index]['statusPengerjaan'],
+                          color: snapshot.data[index]['sudahBayar'] == 0
+                              ? Colors.red
+                              : Colors.green,
+                          sudahBayar: snapshot.data[index]['sudahBayar'],
+                        );
+                      },
+                    ),
+                  ),
+          );
+        },
       ),
     );
   }
 }
 
 class AwesomeListItem extends StatefulWidget {
-  String title;
-  String content;
-  Color color;
-  String image;
+  final String title;
+  final String content;
+  final Color color;
+  final int sudahBayar;
 
-  AwesomeListItem({this.title, this.content, this.color, this.image});
+  AwesomeListItem({this.title, this.content, this.color, this.sudahBayar});
 
   @override
   _AwesomeListItemState createState() => new _AwesomeListItemState();
@@ -137,74 +96,44 @@ class AwesomeListItem extends StatefulWidget {
 class _AwesomeListItemState extends State<AwesomeListItem> {
   @override
   Widget build(BuildContext context) {
-    return new Row(
-      children: <Widget>[
-        new Container(width: 10.0, height: 190.0, color: widget.color),
-        new Container(
-          height: 150.0,
-          width: 150.0,
-          color: Colors.white,
-          child: Stack(
-            children: <Widget>[
-              new Transform.translate(
-                offset: new Offset(50.0, 0.0),
-                child: new Container(
-                  height: 100.0,
-                  width: 100.0,
-                  color: widget.color,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: ColoredBox(
+        color: Colors.lightGreen[200],
+        child: new Row(
+          children: <Widget>[
+            new Container(width: 10.0, height: 120.0, color: widget.color),
+            new Expanded(
+              child: new Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 20.0, horizontal: 20.0),
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Text(
+                      widget.title,
+                      style: TextStyle(
+                          color: Colors.grey.shade800,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    new Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: new Text(
+                        widget.content,
+                        style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              new Transform.translate(
-                offset: Offset(10.0, 20.0),
-                child: new Card(
-                  elevation: 20.0,
-                  child: new Container(
-                    height: 120.0,
-                    width: 120.0,
-                    decoration: new BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                            width: 10.0,
-                            color: Colors.white,
-                            style: BorderStyle.solid),
-                        image: DecorationImage(
-                          image: NetworkImage(widget.image),
-                        )),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        new Expanded(
-          child: new Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                new Text(
-                  widget.title,
-                  style: TextStyle(
-                      color: Colors.grey.shade800,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                new Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: new Text(
-                    widget.content,
-                    style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

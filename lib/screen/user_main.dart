@@ -25,7 +25,7 @@ class UserMain extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FlutterLogo(),
-                Text('Dimas Prayoga'),
+                Text(SharedPrefs().username ?? 'error'),
               ],
             ),
             SizedBox(
