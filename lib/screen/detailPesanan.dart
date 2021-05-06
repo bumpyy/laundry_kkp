@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:indonesia/indonesia.dart';
-import 'package:laundry_kkp/model/laundry.dart';
+import '../model/laundry.dart';
 
 class DetailPesanan extends StatelessWidget {
   final Laundry laundry;

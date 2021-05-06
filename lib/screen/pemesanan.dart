@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:laundry_kkp/services/db_helper.dart';
-import 'package:laundry_kkp/services/shared_pref.dart';
+import '../services/db_helper.dart';
+import '../services/shared_pref.dart';
 
 class Pemesanan extends StatefulWidget {
   @override

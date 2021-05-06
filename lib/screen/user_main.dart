@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:laundry_kkp/app/sign_in/sign_in_button.dart';
-import 'package:laundry_kkp/app/sign_in/sign_in_page.dart';
-import 'package:laundry_kkp/screen/pemesanan.dart';
-import 'package:laundry_kkp/services/shared_pref.dart';
-import 'package:laundry_kkp/widgets/list_pesanan.dart';
+import '../pages/login_page.dart';
+import '../app/sign_in/sign_in_button.dart';
+import '../app/sign_in/sign_in_page.dart';
+import 'pemesanan.dart';
+import '../services/shared_pref.dart';
+import '../widgets/list_pesanan.dart';
 
 class UserMain extends StatelessWidget {
   @override
@@ -75,7 +76,7 @@ class UserMain extends StatelessWidget {
               onTap: () => {
                 SharedPrefs().username = '',
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => LoginScreen(),
+                  builder: (context) => LoginPage(),
                 ))
               },
               child: Text('Logout'),

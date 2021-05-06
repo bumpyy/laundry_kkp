@@ -38,8 +38,9 @@ class DatabaseHelper {
         .execute('''
           CREATE TABLE users (
             id INTEGER PRIMARY KEY autoincrement,
+            username TEXT NOT NULL,
             email TEXT NOT NULL,
-            pass INTEGER NOT NULL
+            pass TEXT NOT NULL
           )
           ''')
         .then(

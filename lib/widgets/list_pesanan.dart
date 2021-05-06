@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:laundry_kkp/model/laundry.dart';
-import 'package:laundry_kkp/screen/detailPesanan.dart';
-import 'package:laundry_kkp/services/db_helper.dart';
-import 'package:laundry_kkp/services/shared_pref.dart';
+import '../model/laundry.dart';
+import '../screen/detailPesanan.dart';
+import '../services/db_helper.dart';
+import '../services/shared_pref.dart';
 
 class ListPesanan extends StatefulWidget {
   ListPesanan({Key key, this.title}) : super(key: key);

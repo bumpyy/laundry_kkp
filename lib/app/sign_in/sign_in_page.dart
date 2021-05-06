@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:laundry_kkp/screen/user_main.dart';
-import 'package:laundry_kkp/services/db_helper.dart';
-import 'package:laundry_kkp/services/shared_pref.dart';
+import '../../screen/user_main.dart';
+import '../../services/db_helper.dart';
+import '../../services/shared_pref.dart';
 
 const users = const {
   'dribbble@gmail.com': '12345',

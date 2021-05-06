@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:laundry_kkp/app/sign_in/sign_in_page.dart';
-import 'package:laundry_kkp/screen/user_main.dart';
-import 'package:laundry_kkp/services/shared_pref.dart';
+
+import 'pages/login_page.dart';
+import 'screen/user_main.dart';
+import 'services/shared_pref.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: Center(
-          child: SharedPrefs().username != "" ? UserMain() : LoginScreen(),
+          child: SharedPrefs().username != "" ? UserMain() : LoginPage(),
         ),
       ),
     );
