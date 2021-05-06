@@ -49,9 +49,11 @@ class DatabaseHelper {
             nama TEXT NOT NULL,
             emailUser TEXT NOT NULL,
             lokasi TEXT NOT NULL,
-            berat TEXT NOT NULL,
+            berat INTEGER NOT NULL,
             kategori TEXT NOT NULL,
             kategoriPengerjaan TEXT NOT NULL,
+            harga INTEGER NOT NULL,
+            date TEXT NOT NULL,
             sudahBayar INTEGER,
             statusPengerjaan TEXT NOT NULL
           )

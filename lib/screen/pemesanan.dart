@@ -10,6 +10,16 @@ class Pemesanan extends StatefulWidget {
 
 class _PemesananState extends State<Pemesanan> {
   final _formKey = GlobalKey<FormBuilderState>();
+  final kategoriMap = {
+    'cuci': 10000,
+    'setrika': 12000,
+    'complete': 20000,
+  };
+  final kategoriPengerjaanMap = {
+    'reguler': 10000,
+    'express': 20000,
+    'kilat': 30000,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +73,7 @@ class _PemesananState extends State<Pemesanan> {
                     hint: Text('Kategori'),
                     validator: FormBuilderValidators.compose(
                         [FormBuilderValidators.required(context)]),
-                    items: ['cuci', 'setrika', 'complete']
+                    items: kategoriMap.keys
                         .map((v) => DropdownMenuItem(
                               value: v,
                               child: Text('$v'),
@@ -79,7 +89,8 @@ class _PemesananState extends State<Pemesanan> {
                     // valueTransformer: (text) => num.tryParse(text),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(context),
-                      FormBuilderValidators.numeric(context)
+                      FormBuilderValidators.numeric(context),
+                      FormBuilderValidators.max(context, 20),
                     ]),
                     keyboardType: TextInputType.number,
                   ),
@@ -94,7 +105,7 @@ class _PemesananState extends State<Pemesanan> {
                     hint: Text('Pilih Jenis Pengerjaan'),
                     validator: FormBuilderValidators.compose(
                         [FormBuilderValidators.required(context)]),
-                    items: ['reguler', 'express', 'kilat']
+                    items: kategoriPengerjaanMap.keys
                         .map((v) => DropdownMenuItem(
                               value: v,
                               child: Text('$v'),
@@ -117,11 +128,27 @@ class _PemesananState extends State<Pemesanan> {
                       ),
                       onPressed: () async {
                         _formKey.currentState.save();
+
                         if (_formKey.currentState.validate()) {
+                          final beratFinal =
+                              _formKey.currentState.value['berat'];
+                          final faktorHarga1 = kategoriMap[
+                              _formKey.currentState.value['kategori']];
+                          final faktorHarga2 = kategoriPengerjaanMap[_formKey
+                              .currentState.value['kategoriPengerjaan']];
+
+                          // print(beratFinal);
+                          // print(faktorHarga1);
+                          // print(faktorHarga2);
+                          final date = DateTime.now();
                           final value = {
                             'emailUser': SharedPrefs().username,
                             'SudahBayar': 0,
-                            'statusPengerjaan': 'diproses'
+                            'statusPengerjaan': 'diproses',
+                            'harga': (int.parse(beratFinal) *
+                                    (faktorHarga1 + faktorHarga2))
+                                .toInt(),
+                            'date': "${date.day}-${date.month}-${date.year}"
                           };
                           value.addAll(_formKey.currentState.value);
                           print(value);

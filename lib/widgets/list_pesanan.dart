@@ -1,16 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:laundry_kkp/model/laundry.dart';
+import 'package:laundry_kkp/screen/detailPesanan.dart';
 import 'package:laundry_kkp/services/db_helper.dart';
 import 'package:laundry_kkp/services/shared_pref.dart';
-
-const COLORS = [
-  Color(0xFFEF7A85),
-  Color(0xFFFF90B3),
-  Color(0xFFFFC2E2),
-  Color(0xFFB892FF),
-  Color(0xFFB892FF)
-];
 
 class ListPesanan extends StatefulWidget {
   ListPesanan({Key key, this.title}) : super(key: key);
@@ -21,17 +13,13 @@ class ListPesanan extends StatefulWidget {
 }
 
 class _ListPesananState extends State<ListPesanan> {
-  var data = [];
   @override
   Widget build(BuildContext context) {
-    DatabaseHelper.instance.queryAllPesananRows().then((value) => data = value);
-
     return new Scaffold(
       backgroundColor: Colors.white,
       appBar: new AppBar(
-        // elevation: 0.0,
         title: new Text(
-          "Daftar Pesanan",
+          "Daftar Pesanan anda",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -40,7 +28,7 @@ class _ListPesananState extends State<ListPesanan> {
             .queryAllPesananSingleUserRows(SharedPrefs().username),
         initialData: [],
         builder: (context, snapshot) {
-          print(snapshot.data);
+          // print(snapshot.data);
           return Container(
             height: MediaQuery.of(context).size.height,
             child: snapshot.data.isEmpty
@@ -61,15 +49,27 @@ class _ListPesananState extends State<ListPesanan> {
                       padding: const EdgeInsets.all(0.0),
                       scrollDirection: Axis.vertical,
                       primary: true,
-                      itemCount: snapshot.hasData ? snapshot.data.length : 0,
+                      itemCount: snapshot.data.length,
                       itemBuilder: (BuildContext content, int index) {
-                        return AwesomeListItem(
-                          title: snapshot.data[index]['nama'],
-                          content: snapshot.data[index]['statusPengerjaan'],
-                          color: snapshot.data[index]['sudahBayar'] == 0
-                              ? Colors.red
-                              : Colors.green,
-                          sudahBayar: snapshot.data[index]['sudahBayar'],
+                        return GestureDetector(
+                          onTap: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => DetailPesanan(
+                                  new Laundry.fromJson(snapshot.data[index]),
+                                ),
+                              ),
+                            )
+                          },
+                          child: AwesomeListItem(
+                            title: snapshot.data[index]['nama'],
+                            content: snapshot.data[index]['statusPengerjaan'],
+                            color: snapshot.data[index]['sudahBayar'] == 0
+                                ? Colors.red
+                                : Colors.green,
+                            sudahBayar: snapshot.data[index]['sudahBayar'],
+                          ),
                         );
                       },
                     ),
