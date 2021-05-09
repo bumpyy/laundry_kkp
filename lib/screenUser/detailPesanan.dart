@@ -77,7 +77,7 @@ class DetailPesanan extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Column(
+            child: Row(
               children: [
                 Column(
                   children: [

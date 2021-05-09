@@ -40,7 +40,7 @@ class _PemesananState extends State<Pemesanan> {
               child: Column(
                 children: <Widget>[
                   FormBuilderTextField(
-                    name: 'nama',
+                    name: 'nama', initialValue: SharedPrefs().username,
                     decoration: InputDecoration(
                       labelText: 'Masukan Nama Anda',
                     ),

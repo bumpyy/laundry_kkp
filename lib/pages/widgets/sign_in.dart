@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../screen/user_main.dart';
+import '../Admin_login/sign_in_Admin.dart';
+import '../../screenUser/user_main.dart';
 import '../../services/db_helper.dart';
 import '../../services/shared_pref.dart';
 import '../../theme.dart';
@@ -36,6 +37,7 @@ class _SignInState extends State<SignIn> {
     return Container(
       padding: const EdgeInsets.only(top: 23.0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Stack(
             alignment: Alignment.topCenter,
@@ -167,9 +169,9 @@ class _SignInState extends State<SignIn> {
                   ),
                   onPressed: () => _authUser(),
                 ),
-              )
+              ),
             ],
-          ),
+          )
           // Padding(
           //   padding: const EdgeInsets.only(top: 10.0),
           //   child: TextButton(
@@ -183,6 +185,29 @@ class _SignInState extends State<SignIn> {
           //             fontFamily: 'WorkSansMedium'),
           //       )),
           // ),
+          ,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 25.0),
+            child: MaterialButton(
+              highlightColor: Colors.transparent,
+              splashColor: CustomTheme.loginGradientEnd,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 42.0),
+                child: Text(
+                  'Admin Login',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
+                      fontFamily: 'WorkSansBold'),
+                ),
+              ),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AdminLoginScreen(),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

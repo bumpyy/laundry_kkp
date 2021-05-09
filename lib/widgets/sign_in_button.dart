@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../common_widgets/custom_elevated_widget.dart';
+import '../common_widgets/custom_elevated_widget.dart';
 
 class SignInButton extends CustomElevatedButton {
   SignInButton({

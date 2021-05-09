@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:laundry_kkp/screenAdmin/detailPesananAdmin.dart';
 import '../model/laundry.dart';
-import '../screen/detailPesanan.dart';
+import '../screenUser/detailPesanan.dart';
 import '../services/db_helper.dart';
 import '../services/shared_pref.dart';
 
@@ -24,8 +25,10 @@ class _ListPesananState extends State<ListPesanan> {
         ),
       ),
       body: FutureBuilder(
-        future: DatabaseHelper.instance
-            .queryAllPesananSingleUserRows(SharedPrefs().username),
+        future: SharedPrefs().username == 'admin@admin.com'
+            ? DatabaseHelper.instance.queryAllPesananRows()
+            : DatabaseHelper.instance
+                .queryAllPesananSingleUserRows(SharedPrefs().username),
         initialData: [],
         builder: (context, snapshot) {
           // print(snapshot.data);
@@ -56,9 +59,18 @@ class _ListPesananState extends State<ListPesanan> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => DetailPesanan(
-                                  new Laundry.fromJson(snapshot.data[index]),
-                                ),
+                                builder: (_) =>
+                                    SharedPrefs().username == 'admin@admin.com'
+                                        ? DetailPesananAdmin(
+                                            new Laundry.fromJson(
+                                              snapshot.data[index],
+                                            ),
+                                          )
+                                        : DetailPesanan(
+                                            new Laundry.fromJson(
+                                              snapshot.data[index],
+                                            ),
+                                          ),
                               ),
                             )
                           },

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import 'pages/login_page.dart';
-import 'screen/user_main.dart';
+import 'screenUser/user_main.dart';
+import 'services/notification.dart';
 import 'services/shared_pref.dart';
 
 Future<void> main() async {
@@ -15,15 +18,22 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Material App',
-      theme: ThemeData().copyWith(
-        primaryColor: Colors.green,
-        accentColor: Colors.green,
-      ),
-      home: Scaffold(
-        body: Center(
-          child: SharedPrefs().username != "" ? UserMain() : LoginPage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => NotificationService(),
+        )
+      ],
+      child: MaterialApp(
+        title: 'Material App',
+        theme: ThemeData().copyWith(
+          primaryColor: Colors.green,
+          accentColor: Colors.green,
+        ),
+        home: Scaffold(
+          body: Center(
+            child: SharedPrefs().username != "" ? UserMain() : LoginPage(),
+          ),
         ),
       ),
     );

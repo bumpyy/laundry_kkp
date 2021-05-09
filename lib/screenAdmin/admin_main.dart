@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
+import '../services/notification.dart';
+import 'package:provider/provider.dart';
 import '../pages/login_page.dart';
-import '../app/sign_in/sign_in_button.dart';
-import '../app/sign_in/sign_in_page.dart';
-import 'pemesanan.dart';
+import '../widgets/sign_in_button.dart';
+
 import '../services/shared_pref.dart';
 import '../widgets/list_pesanan.dart';
 
-class UserMain extends StatelessWidget {
+class AdminMain extends StatefulWidget {
+  @override
+  _AdminMainState createState() => _AdminMainState();
+}
+
+class _AdminMainState extends State<AdminMain> {
+  @override
+  void initState() {
+    Provider.of<NotificationService>(context, listen: false).initialize();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -18,7 +31,7 @@ class UserMain extends StatelessWidget {
               width: double.infinity,
               height: 150.0,
             ),
-            Text('&D LAUNDRY'),
+            Text('ADMIN &D LAUNDRY'),
             SizedBox(
               height: 50,
             ),
@@ -37,22 +50,22 @@ class UserMain extends StatelessWidget {
               width: 250,
               height: 250.0,
             ),
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: SignInButton(
-                onPressed: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => Pemesanan(),
-                    ),
-                  )
-                },
-                color: Colors.green,
-                text: "PESAN",
-                textColor: Colors.black87,
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(5.0),
+            //   child: SignInButton(
+            //     onPressed: () => {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (_) => PemesananAdmin(),
+            //         ),
+            //       )
+            //     },
+            //     color: Colors.green,
+            //     text: "PESAN",
+            //     textColor: Colors.black87,
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.all(5.0),
               child: SignInButton(
@@ -65,19 +78,18 @@ class UserMain extends StatelessWidget {
                   )
                 },
                 color: Colors.green,
-                text: "CEK STATUS PENGERJAAN",
+                text: "DATA LAUNDRY",
                 textColor: Colors.black87,
               ),
-            ),
-            SizedBox(
-              height: 20,
             ),
             GestureDetector(
               onTap: () => {
                 SharedPrefs().username = '',
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => LoginPage(),
-                ))
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                )
               },
               child: Text('Logout'),
             )
