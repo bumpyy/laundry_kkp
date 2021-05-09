@@ -281,8 +281,7 @@ class _SignUpState extends State<SignUp> {
       );
       return;
     }
-    if (signupPasswordController.text.length !=
-        signupConfirmPasswordController.text) {
+    if (signupPasswordController.text != signupConfirmPasswordController.text) {
       CustomSnackBar(
         context,
         Text('Password tidak sama'),

@@ -60,10 +60,10 @@ class DatabaseHelper {
           )
           '''),
         )
-        .then(
+          .then(
           (value) => db.execute('''
            CREATE TABLE admin (
-            username TEXT NOT NULL,
+            email TEXT NOT NULL,
             pass TEXT NOT NULL
           )
           '''),
@@ -71,7 +71,7 @@ class DatabaseHelper {
         .then(
           (_) => db.insert(
             'admin',
-            {'username': "admin", 'pass': 'admin123'},
+            {'email': "admin@admin", 'pass': 'admin123'},
           ),
         );
   }
